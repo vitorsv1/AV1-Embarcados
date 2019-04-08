@@ -82,6 +82,23 @@ void RTC_Handler(void)
 }
 
 
+void RTT_Handler(void)
+{
+	uint32_t ul_status;
+
+	/* Get RTT status */
+	ul_status = rtt_get_status(RTT);
+
+	/* IRQ due to Time has changed */
+	if ((ul_status & RTT_SR_RTTINC) == RTT_SR_RTTINC) {  }
+
+	/* IRQ due to Alarm */
+	if ((ul_status & RTT_SR_ALMS) == RTT_SR_ALMS) {
+		//pin_toggle(LED_PIO, LED_IDX_MASK);    // BLINK Led
+		f_rtt_alarme = true;                  // flag RTT alarme
+	}
+}
+
 //FUNÇÕES
 
 void pin_toggle(Pio *pio, uint32_t mask){
@@ -207,47 +224,62 @@ int main(void) {
 	char tempo[32];
 	char distancia[32];
 	char velocidade[32];
-	
+	dis = 0;
+	int disNova = 0;
+	vel = 0;
 	int dis_ = 0;
 	int temp_ = 0;
 	int vel_ = 0;
 	
 	
+	rtc_set_date_alarm(RTC, 1, MOUNTH, 1, DAY);
+	
+	
 	font_draw_text(&calibri_36, "CicloComputer", 15, 15, 1);
-	//font_draw_text(&calibri_36, "Velocidade", 15, 60, 1);
+	font_draw_text(&calibri_36, "Velocidade", 15, 60, 1);
 	//font_draw_text(&arial_72, "", 15, 90, 2);
 	font_draw_text(&calibri_36, "Distancia", 15, 170, 1);
 	//font_draw_text(&arial_72,tempo, 15, 205, 2);
 	font_draw_text(&calibri_36, "Tempo", 15, 290, 1);
 	//font_draw_text(&arial_72, "000", 15, 325, 2);
 	while(1) {
-		//pmc_sleep(SAM_PM_SMODE_SLEEP_WFI);
+		pmc_sleep(SAM_PM_SMODE_SLEEP_WFI);
 		if(but_flag){
 			
-			dis_ = (int) 2*M_PI*0.350*dis;
-			
-			sprintf(distancia,"%d",dis);
-			font_draw_text(&arial_72,distancia, 15, 205, 2);
-			
-			but_flag = 0;
 			dis++;
-			
+			dis_ = (int) 2*M_PI*(0.650/2)*dis;
+			disNova++;
+			but_flag = 0;
 		}
 		
-			
+		
+		
 		if (f_rtt_alarme){
-				
+			
+		
 			uint16_t pllPreScale = (int) (((float) 32768) / 2.0);
 			uint32_t irqRTTvalue  = 4;
-			
+			temp_ += 2;
+			vel_ = (int) 2*M_PI*(disNova/temp_)*(0.650/2)*3.6; 
 			// reinicia RTT para gerar um novo IRQ
 			RTT_init(pllPreScale, irqRTTvalue);
 			
 			//rtt_read_timer_value();
-			//sprintf(distancia,"%d",dis_);
-			//font_draw_text(&arial_72,distancia, 15, 205, 2);
+			
+			sprintf(velocidade,"%03d",vel_);
+			font_draw_text(&arial_72, velocidade, 15, 90, 2);
+			
+			sprintf(distancia,"%03d",dis_);
+			font_draw_text(&arial_72,distancia, 15, 205, 2);
+			
+			sprintf(tempo,"%d",temp_);
+			font_draw_text(&arial_72, tempo, 15, 325, 2);
 			
 			f_rtt_alarme = false;
+			
+			
+			
+			disNova = 0;
 		}
 		
 	}
