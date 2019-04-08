@@ -48,9 +48,14 @@ int main(void) {
 	sysclk_init();	
 	configure_lcd();
 	
-	font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
-	font_draw_text(&calibri_36, "Oi Mundo! #$!@", 50, 100, 1);
-	font_draw_text(&arial_72, "102456", 50, 200, 2);
+	//font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
+	font_draw_text(&calibri_36, "CicloComputer", 15, 15, 1);
+	font_draw_text(&calibri_36, "Velocidade", 15, 60, 1);
+	font_draw_text(&arial_72, "102456", 15, 90, 2);
+	font_draw_text(&calibri_36, "Distancia", 15, 170, 1);
+	font_draw_text(&arial_72, "102456", 15, 205, 2);
+	font_draw_text(&calibri_36, "Tempo", 15, 290, 1);
+	font_draw_text(&arial_72, "102456", 15, 325, 2);
 	while(1) {
 		
 	}
