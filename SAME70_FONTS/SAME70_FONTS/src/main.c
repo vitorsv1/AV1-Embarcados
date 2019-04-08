@@ -27,6 +27,14 @@ void configure_lcd(void){
 	
 }
 
+char num_to_text (int x){
+	char buffer[32];
+	
+	sprintf(buffer,"%d",x);
+	
+	return buffer;
+
+}
 
 void font_draw_text(tFont *font, const char *text, int x, int y, int spacing) {
 	char *p = text;
@@ -48,14 +56,16 @@ int main(void) {
 	sysclk_init();	
 	configure_lcd();
 	
-	//font_draw_text(&sourcecodepro_28, "OIMUNDO", 50, 50, 1);
+	int a = 10;
+	//char buffer[32] = num_to_text(a);
+	
 	font_draw_text(&calibri_36, "CicloComputer", 15, 15, 1);
 	font_draw_text(&calibri_36, "Velocidade", 15, 60, 1);
-	font_draw_text(&arial_72, "102456", 15, 90, 2);
+	font_draw_text(&arial_72, "000", 15, 90, 2);
 	font_draw_text(&calibri_36, "Distancia", 15, 170, 1);
-	font_draw_text(&arial_72, "102456", 15, 205, 2);
+	font_draw_text(&arial_72, "000", 15, 205, 2);
 	font_draw_text(&calibri_36, "Tempo", 15, 290, 1);
-	font_draw_text(&arial_72, "102456", 15, 325, 2);
+	font_draw_text(&arial_72, "000", 15, 325, 2);
 	while(1) {
 		
 	}
